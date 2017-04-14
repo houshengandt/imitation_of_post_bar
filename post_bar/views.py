@@ -4,9 +4,10 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from .models import PostBar
+from .models import User, PostBar
 
 
 class TestView(TemplateView):
@@ -18,8 +19,9 @@ def index(request):
     return render(request, 'post_bar/index.html', {'bars': bars})
 
 
-class AddPostBarView(TemplateView):
-    template_name = 'post_bar/add-post-bar.html'
+@login_required()
+def add_post_bar(request):
+    return render(request, 'post_bar/add-post-bar.html')
 
 
 def create_post_bar(request):
@@ -36,6 +38,21 @@ class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
 
+class SignUpView(TemplateView):
+    template_name = 'post_bar/sign-up.html'
+
+
+def create_user(request):
+    username = request.POST['username']
+    email = request.POST['email']
+    password = request.POST['password']
+    try:
+        User.objects.create_user(username, email, password)
+    except ValueError:
+        pass
+    return redirect('index')
+
+
 def login_to_system(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -49,4 +66,3 @@ def login_to_system(request):
 def logout_off_system(request):
     logout(request)
     return redirect('index')
-

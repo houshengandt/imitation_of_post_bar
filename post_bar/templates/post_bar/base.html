@@ -5,10 +5,12 @@
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'post_bar/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'post_bar/css/style.css' %}">
+    <style type="text/css">{% block style %}{% endblock %}</style>
 </head>
 <body>
 <nav class="navbar navbar-default">
     <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">贴吧</a>
         <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
             <li class="dropdown">
@@ -20,7 +22,11 @@
                 </ul>
             </li>
         {% else %}
-            <p class="navbar-text navbar-right"><a href="{% url 'sign-in' %}" class="navbar-link">登陆</a></p>
+            <p class="navbar-text navbar-right">
+                <a href="{% url 'sign-in' %}" class="navbar-link">登陆</a>
+                /
+                <a href="{% url 'sign-up' %}" class="navbar-link">注册</a>
+            </p>
         {% endif %}
         </ul>
     </div>

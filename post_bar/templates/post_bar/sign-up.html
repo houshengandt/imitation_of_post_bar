@@ -1,5 +1,5 @@
 {% extends 'post_bar/base.html' %}
-{% block title %}登陆{% endblock %}
+{% block title %}注册{% endblock %}
 {% block style %}
 .login {
     border: 1px solid black;
@@ -10,9 +10,9 @@
 {% endblock %}
 {% block content %}
     <div class="container login">
-    <form class="form-horizontal" action="{% url 'login' %}" method="post">
+    <form class="form-horizontal" action="{% url 'create-user' %}" method="post">
         <div class="form-group">
-            <h2 class="form-signin-heading">登陆到贴吧</h2>
+            <h2 class="form-signin-heading">注册新用户</h2>
         </div>
             {% csrf_token %}
         <div class="form-group">
@@ -20,13 +20,17 @@
             <input id="id_username" class="form-control" type="text" name="username" placeholder="用户名">
         </div>
         <div class="form-group">
+            <label for="id_email">邮箱：</label>
+            <input id="id_email" class="form-control" type="email" name="email" placeholder="邮箱">
+        </div>
+        <div class="form-group">
             <label for="id_password">密码：</label>
             <input id="id_password" class="form-control" type="password" name="password" placeholder="密码">
         </div>
         <div class="form-group">
-            <button type="submit">登陆</button>
+            <button type="submit">注册</button>
         </div>
-        <p>还没有帐号？<a href="{% url 'sign-up' %}">马上注册！</a></p>
+        <p>已有帐号？<a href="{% url 'sign-in' %}">马上登陆</a></p>
     </form>
 </div>
 {% endblock %}
