@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Bar Test</title>
+</head>
+<body>
+{% if user.is_authenticated %}welcome {{ user.username }}
+    <a href="{% url 'logout' %}">logout</a>
+{% else %}welcome anonymous visitor
+    <a href="{% url 'sign-in' %}">please sign in</a>{% endif %}
+</body>
+</html>
