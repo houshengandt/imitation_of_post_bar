@@ -1,21 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>post bar</title>
-</head>
-<body>
-{% if user.is_authenticated %}
-    welcome {{ user.username }}
-    <a href="{% url 'logout' %}">logout</a>
-{% else %}
-    welcome anonymous visitor
-    <a href="{% url 'sign-in' %}">please sign in</a>{% endif %}
+{% extends 'post_bar/base.html' %}
+{% block content %}
+    <div class="container">
+        <from>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <input class="form-control input-lg" type="text" placeholder="彩檬">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-default btn-lg">进吧 </button>
+                    <a href="{% url 'add_post_bar' %}" type="button"> 创建贴吧</a>
+                </div>
+            </div>
+        </from>
+    </div>
+    <li role="separator" class="divider"></li>
+    <div class="container">
+        <div class="col-md-offset-2 col-lg-6">
+            <h2>最新创建的贴吧</h2>
+            <ul class="list-group">
+            {% for bar in bars %}
+                <li class="list-group-item"><h3>{{ bar.bar_name }}</h3> 创建者:<a href="">{{ bar.creator.username }}</a></li>
+            {% empty %}
+                <p>还没有贴吧，<a href="{% url 'add_post_bar' %}" type="button">创建</a>一个吧</p>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-<input type="text"><button>in</button>
-<a href="{% url 'add_post_bar' %}" type="button">create new bar</a>
-
-{% for bar in bars %}{{ bar.bar_name }}{% endfor %}
-
-</body>
-</html>
+{% endblock %}
