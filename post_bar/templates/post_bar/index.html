@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>post bar</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+    welcome {{ user.username }}
+    <a href="{% url 'logout' %}">logout</a>
+{% else %}
+    welcome anonymous visitor
+    <a href="{% url 'sign-in' %}">please sign in</a>{% endif %}
+
+<input type="text"><button>in</button>
+<a href="{% url 'add_post_bar' %}" type="button">create new bar</a>
+
+{% for bar in bars %}{{ bar.bar_name }}{% endfor %}
+
+</body>
+</html>

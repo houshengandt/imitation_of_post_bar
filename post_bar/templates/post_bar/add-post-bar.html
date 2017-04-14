@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Post Bar</title>
+</head>
+<body>
+<form action="{% url 'create_post_bar' %}" method="post">
+    {% csrf_token %}
+    <label for="">bar name</label><input type="text" name="bar_name">
+    <button>create</button>
+</form>
+</body>
+</html>

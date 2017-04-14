@@ -64,8 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class PostBar(models.Model):
     bar_name = models.CharField("贴吧名称", max_length=32)
-    creator = models.OneToOneField(to='User', on_delete=models.CASCADE, related_name='created_bar')
-    manager = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='managing_bar')
+    creator = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='created_bar')
+    manager = models.ForeignKey(to='User', null=True, on_delete=models.SET_NULL, related_name='managing_bar')
+    create_time = models.DateTimeField("贴吧创建时间", auto_now_add=True)
 
     def __unicode__(self):
         return self.bar_name
