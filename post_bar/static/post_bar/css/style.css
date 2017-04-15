@@ -1,5 +1,18 @@
+body {
+    background-color: #E2ECFA;
+}
+
 .banner {
-    background-color: #DDDDDD;
+    background-color: #E6E6E6;
     min-height: 150px;
     padding: 30px 150px;
+}
+
+.post-form-wrapper {
+    background-color: #E6E6E6;
+    padding: 60px 25px;
+}
+
+#id_post_search {
+
 }

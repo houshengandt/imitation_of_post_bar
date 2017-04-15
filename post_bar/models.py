@@ -80,7 +80,7 @@ class PostBar(models.Model):
 class Post(models.Model):
     bar = models.ForeignKey(to='PostBar', on_delete=models.CASCADE, related_name='posts')
     title = models.CharField("帖子标题", max_length=32)
-    poster = models.OneToOneField(to='User', on_delete=models.CASCADE, related_name='posted')
+    poster = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='posted')
     content = models.TextField("帖子内容")
     preview = models.CharField("帖子预览",max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)

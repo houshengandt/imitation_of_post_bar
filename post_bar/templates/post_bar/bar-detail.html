@@ -14,17 +14,54 @@
     </div>
 
     <div class="container col-md-offset-2 col-md-8">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="搜索帖子...">
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                </form>
+                <button class="btn btn-default navbar-btn">发表新帖</button>
+            </div>
+        </nav>
         <div class="list-group">
         {% for post in posts %}
-            <a href="#" class="list-group-item active">
-                <h4 class="list-group-item-heading"><a href="">{{ post.title }}</a></h4>
-                <p class="list-group-item-text">{{ post.content }}</p>
-            </a>
+            <div class="list-group-item">
+                <div class="container-fluid">
+                    <div class="col-md-8">
+                        <h4 class="list-group-item-heading"><a href="">{{ post.title }}</a></h4>
+                        <p class="list-group-item-text">{{ post.preview }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="container-fluid">
+                            <div class="col-md-12">
+                                <span class="glyphicon glyphicon-user">{{ post.poster.username }}</span>
+                            </div>
+                            <div class="col-md-12"><span class="glyphicon glyphicon-time">{{ post.create_time.date }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% empty %}
             该贴吧还没有贴子
         {% endfor %}
+        </div>
     </div>
+    <div class="post-form-wrapper container col-md-offset-2 col-md-8">
+        <h4><span class="glyphicon glyphicon-pencil">发表新帖</span></h4>
+        <hr>
+        <form action="{% url 'create_post' %}" method="post">
+            {% csrf_token %}
+            <input type="text" hidden value="{{ post_bar.pk }}" name="bar_pk">
+            <div class="form-group">
+                <input type="text" class="form-control" name="title" placeholder="请填写标题">
+            </div>
+            <div class="form-group">
+                <textarea name="content" class="form-control" rows="10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">发表</button>
+        </form>
     </div>
-
 </div>
 {% endblock %}

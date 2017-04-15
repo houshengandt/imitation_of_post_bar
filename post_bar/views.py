@@ -40,6 +40,19 @@ def bar_detail(request, post_bar_pk):
     return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': posts})
 
 
+def create_post(request):
+    if request.method == 'POST':
+        bar = PostBar.objects.get(pk=request.POST['bar_pk'])
+        title = request.POST['title']
+        content = request.POST['content']
+        poster = request.user
+
+        new_post = Post(bar=bar, title=title, content=content, poster=poster)
+        new_post.save()
+
+    return redirect('index')   # 跳转到帖子详情页
+
+
 class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
