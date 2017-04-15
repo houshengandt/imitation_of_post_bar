@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from .models import User, PostBar
+from .models import User, PostBar, Post
 
 
 class TestView(TemplateView):
@@ -34,6 +34,12 @@ def create_post_bar(request):
         return redirect('index')
 
 
+def bar_detail(request, post_bar_pk):
+    post_bar = PostBar.objects.get(pk=post_bar_pk)
+    posts = Post.objects.filter(bar=post_bar)
+    return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': posts})
+
+
 class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
@@ -47,9 +53,11 @@ def create_user(request):
     email = request.POST['email']
     password = request.POST['password']
     try:
-        User.objects.create_user(username, email, password)
+        new_user = User.objects.create_user(username, email, password)
+        # login(request, new_user)    在这里是对的
     except ValueError:
         pass
+    login(request, new_user)
     return redirect('index')
 
 

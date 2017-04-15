@@ -1,0 +1,30 @@
+{% extends 'post_bar/base.html' %}
+{% block title %}{{ post_bar.bar_name }}{% endblock %}
+{% block style %}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="banner media">
+        <div class="media-left">
+            <img class="media-object" src="..." alt="...">
+        </div>
+        <div class="media-body">
+            <h2 class="media-heading">{{ post_bar.bar_name }}</h2>
+            ...
+        </div>
+    </div>
+
+    <div class="container col-md-offset-2 col-md-8">
+        <div class="list-group">
+        {% for post in posts %}
+            <a href="#" class="list-group-item active">
+                <h4 class="list-group-item-heading"><a href="">{{ post.title }}</a></h4>
+                <p class="list-group-item-text">{{ post.content }}</p>
+            </a>
+        {% empty %}
+            该贴吧还没有贴子
+        {% endfor %}
+    </div>
+    </div>
+
+</div>
+{% endblock %}

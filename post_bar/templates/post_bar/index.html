@@ -19,7 +19,10 @@
             <h2>最新创建的贴吧</h2>
             <ul class="list-group">
             {% for bar in bars %}
-                <li class="list-group-item"><h3>{{ bar.bar_name }}</h3> 创建者:<a href="">{{ bar.creator.username }}</a></li>
+                <li class="list-group-item">
+                    <a href="{% url 'bar_detail' bar.pk %}"><h3>{{ bar.bar_name }}</h3></a>
+                    创建者:<a href="">{{ bar.creator.username }}</a>
+                </li>
             {% empty %}
                 <p>还没有贴吧，<a href="{% url 'add_post_bar' %}" type="button">创建</a>一个吧</p>
             {% endfor %}
