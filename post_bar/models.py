@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
@@ -64,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class PostBar(models.Model):
     bar_name = models.CharField("贴吧名称", max_length=32)
+    description = models.CharField("贴吧描述", max_length=200)
     creator = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='created_bar')
     manager = models.ForeignKey(to='User', null=True, on_delete=models.SET_NULL, related_name='managing_bar')
     create_time = models.DateTimeField("贴吧创建时间", auto_now_add=True)
@@ -71,18 +73,28 @@ class PostBar(models.Model):
     def __unicode__(self):
         return self.bar_name
 
+    def get_absolute_url(self):
+        return reverse('bar_detail', kwargs={'post_bar_pk': self.pk})
+
 
 class Post(models.Model):
     bar = models.ForeignKey(to='PostBar', on_delete=models.CASCADE, related_name='posts')
     title = models.CharField("帖子标题", max_length=32)
     poster = models.OneToOneField(to='User', on_delete=models.CASCADE, related_name='posted')
     content = models.TextField("帖子内容")
+    preview = models.CharField("帖子预览",max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)
     modify_time = models.DateTimeField("修改时间", auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.preview = self.content[:250]
+        super(Post, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.title
 
+    # def get_absolute_url(self):
+    #     return reverse('blog:detail', kwargs={'article_id': self.pk})
 
 class Comment(models.Model):
     post = models.ForeignKey(to='Post', on_delete=models.CASCADE, related_name='comments')

@@ -20,7 +20,7 @@
             <ul class="list-group">
             {% for bar in bars %}
                 <li class="list-group-item">
-                    <a href="{% url 'bar_detail' bar.pk %}"><h3>{{ bar.bar_name }}</h3></a>
+                    <a href="{{ bar.get_absolute_url }}"><h3>{{ bar.bar_name }}</h3></a>
                     创建者:<a href="">{{ bar.creator.username }}</a>
                 </li>
             {% empty %}
