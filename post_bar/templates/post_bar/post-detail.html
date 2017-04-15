@@ -1,0 +1,103 @@
+{% extends 'post_bar/base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block style %}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="banner media">
+        <div class="media-left">
+            <img class="media-object" src="..." alt="...">
+        </div>
+        <div class="media-body">
+            <a href="{{ post_bar.get_absolute_url }}"><h2 class="media-heading">{{ post_bar.bar_name }}</h2></a>
+            {{ post_bar.description }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="post-title col-sm-offset-2 col-sm-8">
+            <h1>{{ post.title }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="user-info col-sm-offset-2 col-sm-2">
+            <div class="avatar thumbnail">
+                <img src="{{ post.poster.avatar.url }}" alt="{{ post.poster.username }}">
+                <div class="caption">
+                    <p>{{ post.poster.username }}</p>
+              </div>
+            </div>
+        </div>
+        <div class="post-content col-sm-6">
+            {{ post.content }}
+            <div class="bottom-info row" bottom>
+                <p class="">{{ post.modify_time }}<a href="">回复</a></p>
+            </div>
+        </div>
+    </div>
+    {% for comment_has_not_father in comments_has_not_father %}
+    <div class="row">
+        <div class="user-info col-sm-offset-2 col-sm-2">
+            <div class="avatar thumbnail">
+                <img src="{{ comment_has_not_father.commenter.avatar.url }}" alt="{{ comment_has_not_father.commenter.username }}">
+                    <div class="caption">
+                        <p>{{ comment_has_not_father.commenter.username }}</p>
+                    </div>
+            </div>
+        </div>
+        <div class="post-content col-sm-6">
+            {{ comment_has_not_father.comment }}
+            <div class="bottom-info row" bottom>
+                <p class="">{{ comment_has_not_father.comment_time }}<a data-toggle="collapse" href="#collapse_{{ comment_has_not_father.pk }}" aria-expanded="false" aria-controls="collapse_{{ comment_has_not_father.pk }}">回复</a></p>
+            </div>
+        </div>
+    </div>
+    {% if comment_has_not_father.has_child %}
+        <div class="row">
+            <div class="comment-wrapper col-xs-offset-4 col-xs-6">
+                <ul class="list-group">
+                    {% for comment_has_father in comment_has_not_father.child_comment.all %}
+                        <li class="comment-list-item list-group-item">
+                            <p>
+                                {{ comment_has_father.commenter.username }}:
+                                {{ comment_has_father.comment }}
+                            </p>
+                        <a class="comment-info" data-toggle="collapse" href="#collapse_{{ comment_has_not_father.pk }}" aria-expanded="false" aria-controls="collapse_{{ comment_has_not_father.pk }}">回复</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="comment-form-wrapper col-xs-offset-4 col-xs-6">
+            <div class="collapse" id="collapse_{{ comment_has_not_father.pk }}">
+                <div class="well">
+                    <form action="{% url 'create_comment' %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" hidden value="{{ post.pk }}" name="post_pk">
+                        <input type="text" hidden value="{{ comment_has_not_father.pk }}" name="comment_pk">
+                        <textarea name="comment" class="form-control" rows="3"></textarea>
+                        <hr>
+                        <button class="btn btn-primary right" type="submit">发表</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="post-form-wrapper container col-md-offset-2 col-md-8">
+        <h4><span class="glyphicon glyphicon-pencil">发表回复</span></h4>
+        <hr>
+        <form action="{% url 'create_comment' %}" method="post">
+            {% csrf_token %}
+            <input type="text" hidden value="{{ post.pk }}" name="post_pk">
+            <div class="form-group">
+                <textarea name="commnet" class="form-control" rows="10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">发表</button>
+        </form>
+    </div>
+
+
+</div>
+{% endblock %}

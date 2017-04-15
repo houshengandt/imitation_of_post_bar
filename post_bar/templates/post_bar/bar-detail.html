@@ -8,8 +8,8 @@
             <img class="media-object" src="..." alt="...">
         </div>
         <div class="media-body">
-            <h2 class="media-heading">{{ post_bar.bar_name }}</h2>
-            ...
+            <a href="{{ post_bar.get_absolute_url }}"><h2 class="media-heading">{{ post_bar.bar_name }}</h2></a>
+            {{ post_bar.description }}
         </div>
     </div>
 
@@ -30,7 +30,7 @@
             <div class="list-group-item">
                 <div class="container-fluid">
                     <div class="col-md-8">
-                        <h4 class="list-group-item-heading"><a href="">{{ post.title }}</a></h4>
+                        <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' post.pk %}">{{ post.title }}</a></h4>
                         <p class="list-group-item-text">{{ post.preview }}</p>
                     </div>
                     <div class="col-md-4">

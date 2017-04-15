@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView
+from django.shortcuts import render, redirect, HttpResponse
+from django.views.generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 
-from .models import User, PostBar, Post
+from .models import User, PostBar, Post, Comment
 
 
 class TestView(TemplateView):
@@ -53,6 +52,35 @@ def create_post(request):
     return redirect('index')   # 跳转到帖子详情页
 
 
+def post_detail(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    comments = Comment.objects.filter(post=post)
+    comments_has_not_father = Comment.objects.filter(post=post, father_comment=None)
+    comments_has_father = Comment.objects.filter(post=post).exclude(father_comment=None)
+    post_bar = post.bar
+    content = {'post_bar': post_bar, 'post': post, 'comments': comments, 'comments_has_father': comments_has_father,
+               'comments_has_not_father': comments_has_not_father}
+
+    return render(request, 'post_bar/post-detail.html', content)
+
+
+def add_comment(request):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=request.POST['post_pk'])
+        comment = request.POST['comment']
+        parent_comment_pk = request.POST.get('comment_pk')
+        commenter = request.user
+        if parent_comment_pk:
+            parent_comment = Comment.objects.get(pk=parent_comment_pk)
+            new_comment = Comment(post=post, comment=comment, commenter=commenter, father_comment=parent_comment)
+        else:
+            new_comment = Comment(post=post, comment=comment, commenter=commenter)
+
+        new_comment.save()
+        # return HttpResponse()
+        return redirect('post_deatil', post_pk=post.pk)
+
+
 class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
@@ -67,10 +95,9 @@ def create_user(request):
     password = request.POST['password']
     try:
         new_user = User.objects.create_user(username, email, password)
-        # login(request, new_user)    在这里是对的
+        login(request, new_user)
     except ValueError:
         pass
-    login(request, new_user)
     return redirect('index')
 
 

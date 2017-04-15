@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField("用户名", max_length=32, unique=True)
     email = models.EmailField("邮箱", unique=True)
-    avatar = models.ImageField("头像", upload_to='avatars/', default='media/avatars/default.jpg')
+    avatar = models.ImageField("头像", upload_to='avatars/', default='avatars/default.jpg')
     last_login = models.DateTimeField("上次登录时间", blank=True, null=True)
     is_staff = models.BooleanField('staff status', default=False)
     is_active = models.BooleanField("用户状态", default=True)
@@ -66,6 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class PostBar(models.Model):
     bar_name = models.CharField("贴吧名称", max_length=32)
     description = models.CharField("贴吧描述", max_length=200)
+    cover = models.ImageField("封面", upload_to='covers/', default='corvers/default.jpg')
     creator = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='created_bar')
     manager = models.ForeignKey(to='User', null=True, on_delete=models.SET_NULL, related_name='managing_bar')
     create_time = models.DateTimeField("贴吧创建时间", auto_now_add=True)
@@ -100,5 +101,11 @@ class Comment(models.Model):
     post = models.ForeignKey(to='Post', on_delete=models.CASCADE, related_name='comments')
     comment = models.TextField("评论内容")
     comment_time = models.DateTimeField("评论时间", auto_now_add=True)
-    commenter = models.OneToOneField(to='User')
-    child_comment = models.ForeignKey(to='self', null=True, on_delete=models.CASCADE, related_name='father_comment')
+    commenter = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='comments')
+    father_comment = models.ForeignKey(to='self', null=True, on_delete=models.CASCADE, related_name='child_comment')
+
+    def has_father(self):
+        return self.father_comment != None
+
+    def has_child(self):
+        return self.child_comment != None

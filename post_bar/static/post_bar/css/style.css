@@ -10,9 +10,53 @@ body {
 
 .post-form-wrapper {
     background-color: #E6E6E6;
-    padding: 60px 25px;
+    padding: 60px;
 }
 
 #id_post_search {
 
+}
+
+.post-title {
+    background-color: white;
+    border-bottom: 1px solid;
+}
+
+.post-content{
+    background-color: white;
+    position: relative;
+}
+
+.user-info {
+    border: 1px solid;
+    background-color: white;
+    min-height: 150px;
+}
+
+.avatar {
+    border: 0;
+}
+
+.bottom-info {
+    position: absolute;
+    bottom: 0px;
+    right: 30px;
+}
+
+.comment-form-wrapper {
+    padding: 0;
+}
+
+.comment-wrapper {
+    padding: 0px;
+}
+
+.comment-list-item {
+    position: relative;
+}
+
+.comment-info {
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
 }
