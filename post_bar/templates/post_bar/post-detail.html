@@ -5,11 +5,11 @@
 <div class="container">
     <div class="banner media">
         <div class="media-left">
-            <img class="media-object" src="..." alt="...">
+            <img class="post-cover media-object" src="{{ post_bar.cover.url }}" alt="">
         </div>
         <div class="media-body">
             <a href="{{ post_bar.get_absolute_url }}"><h2 class="media-heading">{{ post_bar.bar_name }}</h2></a>
-            {{ post_bar.description }}
+            <p class="post-bar-description">{{ post_bar.description }}</p>
         </div>
     </div>
     <div class="row">
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="post-content col-sm-6">
-            {{ post.content }}
+            <p class="content">{{ post.content }}</p>
             <div class="bottom-info row" bottom>
                 <p class="">{{ post.modify_time }}<a href="">回复</a></p>
             </div>
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="post-content col-sm-6">
-            {{ comment_has_not_father.comment }}
+            <p>{{ comment_has_not_father.comment }}</p>
             <div class="bottom-info row" bottom>
                 <p class="">{{ comment_has_not_father.comment_time }}<a data-toggle="collapse" href="#collapse_{{ comment_has_not_father.pk }}" aria-expanded="false" aria-controls="collapse_{{ comment_has_not_father.pk }}">回复</a></p>
             </div>
@@ -53,7 +53,7 @@
     {% if comment_has_not_father.has_child %}
         <div class="row">
             <div class="comment-wrapper col-xs-offset-4 col-xs-6">
-                <ul class="list-group">
+                <ul class="comment-list list-group">
                     {% for comment_has_father in comment_has_not_father.child_comment.all %}
                         <li class="comment-list-item list-group-item">
                             <p>
@@ -92,7 +92,7 @@
             {% csrf_token %}
             <input type="text" hidden value="{{ post.pk }}" name="post_pk">
             <div class="form-group">
-                <textarea name="commnet" class="form-control" rows="10"></textarea>
+                <textarea name="comment" class="form-control" rows="10"></textarea>
             </div>
             <button type="submit" class="btn btn-default">发表</button>
         </form>

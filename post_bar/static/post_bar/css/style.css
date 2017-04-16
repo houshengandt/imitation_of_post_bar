@@ -26,6 +26,10 @@ body {
     background-color: white;
     position: relative;
 }
+.post-content > p {
+    font-size: medium;
+    padding: 10px 20px;
+}
 
 .user-info {
     border: 1px solid;
@@ -49,6 +53,11 @@ body {
 
 .comment-wrapper {
     padding: 0px;
+    margin-top: -20px;
+}
+
+.comment-list {
+    margin-top: 20px;
 }
 
 .comment-list-item {
@@ -59,4 +68,15 @@ body {
     position: absolute;
     right: 10px;
     bottom: 0px;
+}
+
+
+
+.post-cover {
+    width: 150px;
+    height: 150px;
+}
+.post-bar-description {
+    margin-top: 50px;
+    font-size: large;
 }

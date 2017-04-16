@@ -5,6 +5,9 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+import os
 
 from .models import User, PostBar, Post, Comment
 
@@ -18,20 +21,36 @@ def index(request):
     return render(request, 'post_bar/index.html', {'bars': bars})
 
 
-@login_required()
 def add_post_bar(request):
     return render(request, 'post_bar/add-post-bar.html')
 
 
+@login_required()
 def create_post_bar(request):
     if request.method == 'POST':
+        print(request.POST)
+        print(request.FILES)
+        cover = request.FILES.get("cover", None)
         bar_name = request.POST['bar_name']
+        description = request.POST['description']
         creator = request.user
         manager = request.user
-        new_post_bar = PostBar(bar_name=bar_name, creator=creator, manager=manager)
+        (shotname, extension) = os.path.splitext(cover.name)
+        cover.name = str(creator.pk) + extension
+        new_post_bar = PostBar(bar_name=bar_name, cover=cover, description=description, creator=creator, manager=manager)
         new_post_bar.save()
         return redirect('index')
 
+
+def enter_or_create(request):
+    if request.method == 'POST':
+        bar_name = request.POST['bar_name']
+        try:
+            bar = PostBar.objects.get(bar_name=bar_name)
+        except PostBar.DoesNotExist:
+            messages.info(request, "还没有 %s 这个贴吧， 马上创建" % bar_name)
+            return redirect('add_post_bar')
+        return redirect('bar_detail', post_bar_pk=bar.pk)
 
 def bar_detail(request, post_bar_pk):
     post_bar = PostBar.objects.get(pk=post_bar_pk)
@@ -39,6 +58,7 @@ def bar_detail(request, post_bar_pk):
     return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': posts})
 
 
+@login_required()
 def create_post(request):
     if request.method == 'POST':
         bar = PostBar.objects.get(pk=request.POST['bar_pk'])

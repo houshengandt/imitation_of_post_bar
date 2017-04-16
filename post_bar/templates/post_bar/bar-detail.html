@@ -5,11 +5,11 @@
 <div class="container">
     <div class="banner media">
         <div class="media-left">
-            <img class="media-object" src="..." alt="...">
+            <img class="post-cover media-object" src="{{ post_bar.cover.url }}" alt="">
         </div>
         <div class="media-body">
             <a href="{{ post_bar.get_absolute_url }}"><h2 class="media-heading">{{ post_bar.bar_name }}</h2></a>
-            {{ post_bar.description }}
+            <p class="post-bar-description">{{ post_bar.description }}</p>
         </div>
     </div>
 
@@ -44,7 +44,7 @@
                 </div>
             </div>
         {% empty %}
-            该贴吧还没有贴子
+            <h3>该贴吧还没有贴子</h3>
         {% endfor %}
         </div>
     </div>

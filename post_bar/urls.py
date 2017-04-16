@@ -7,6 +7,7 @@ from imitation_of_post_bar import settings
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^create_post_bar', views.create_post_bar, name='create_post_bar'),
+    url(r'^enter_or_create_bar', views.enter_or_create, name='enter_or_create_bar'),
     url(r'^post_bar/(?P<post_bar_pk>\d+)', views.bar_detail, name='bar_detail'),
     url(r'^add_post_bar', views.add_post_bar, name='add_post_bar'),
     url(r'^create_post', views.create_post, name='create_post'),
