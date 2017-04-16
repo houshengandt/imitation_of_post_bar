@@ -52,6 +52,7 @@ def enter_or_create(request):
             return redirect('add_post_bar')
         return redirect('bar_detail', post_bar_pk=bar.pk)
 
+
 def bar_detail(request, post_bar_pk):
     post_bar = PostBar.objects.get(pk=post_bar_pk)
     posts = Post.objects.filter(bar=post_bar)
@@ -70,6 +71,19 @@ def create_post(request):
         new_post.save()
 
     return redirect('index')   # 跳转到帖子详情页
+
+
+@login_required()
+def delete_post(request, post_pk):
+    try:
+        post = Post.objects.get(pk=post_pk)
+    except Post.DoesNotExist:
+        pass
+    if request.user == post.poster:
+        post.delete()
+        return redirect('bar_detail', post_bar_pk=post.bar.pk)
+    else:
+        return HttpResponse(status=403)
 
 
 def post_detail(request, post_pk):
@@ -101,6 +115,19 @@ def add_comment(request):
         return redirect('post_deatil', post_pk=post.pk)
 
 
+@login_required()
+def delete_comment(request, commnet_pk):
+    try:
+        comment = Comment.objects.get(pk=commnet_pk)
+    except Comment.DoesNotExist:
+        pass
+    if request.user == comment.commenter or request.user == comment.post.poster:
+        comment.delete()
+        return HttpResponse()
+    else:
+        return HttpResponse(status=403)
+
+
 class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
@@ -128,7 +155,7 @@ def login_to_system(request):
     if user is not None:
         if user and user.is_active:
             login(request, user)
-    return redirect('index')
+    return HttpResponse()
 
 
 def logout_off_system(request):
