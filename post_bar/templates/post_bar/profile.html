@@ -48,11 +48,11 @@
                         <div class="col-md-8">
                             <p>{{ comment.comment_time }} 回复
                             {% if comment.has_father %}
-                                {{ comment.father_comment.commenter.username }}
+                                <a href="{{ comment.father_comment.commenter.get_absolute_url }}">{{ comment.father_comment.commenter.username }}</a>
                             {% else %}
-                                {{ comment.post.poster.username }}
+                                <a href="{{ comment.post.poster.get_absolute_url }}">{{ comment.post.poster.username }}</a>
                             {% endif %}
-                            :{{ comment.comment }}
+                            : {{ comment.comment }}
                             </p>
                             <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' comment.post.pk %}">{{ comment.post.title }}</a></h4>
                         </div>

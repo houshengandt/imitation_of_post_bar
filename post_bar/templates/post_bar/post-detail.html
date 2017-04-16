@@ -22,7 +22,7 @@
             <div class="avatar thumbnail">
                 <img src="{{ post.poster.avatar.url }}" alt="{{ post.poster.username }}">
                 <div class="caption">
-                    <p>{{ post.poster.username }}</p>
+                    <p><a href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a></p>
               </div>
             </div>
         </div>
@@ -40,9 +40,9 @@
         <div class="user-info col-sm-offset-2 col-sm-2">
             <div class="avatar thumbnail">
                 <img src="{{ comment_has_not_father.commenter.avatar.url }}" alt="{{ comment_has_not_father.commenter.username }}">
-                    <div class="caption">
-                        <p>{{ comment_has_not_father.commenter.username }}</p>
-                    </div>
+                <div class="caption">
+                    <p><a href="{{ comment_has_not_father.commenter.get_absolute_url }}">{{ comment_has_not_father.commenter.username }}</a></p>
+                </div>
             </div>
         </div>
         <div class="post-content col-sm-6">
@@ -65,7 +65,8 @@
                     {% for comment_has_father in comment_has_not_father.child_comment.all %}
                         <li class="comment-list-item list-group-item">
                             <p>
-                                {{ comment_has_father.commenter.username }}:
+                                <a href="{{ comment_has_father.commenter.get_absolute_url }}">{{ comment_has_father.commenter.username }}</a> 回复
+                                <a href="{{ comment_has_father.father_comment.commenter.get_absolute_url }}">{{ comment_has_father.father_comment.commenter.username }}</a>:
                                 {{ comment_has_father.comment }}
                             </p>
                             <div class="comment-info">

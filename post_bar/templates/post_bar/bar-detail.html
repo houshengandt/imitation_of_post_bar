@@ -36,7 +36,7 @@
                     <div class="col-md-4">
                         <div class="container-fluid">
                             <div class="col-md-12">
-                                <span class="glyphicon glyphicon-user">{{ post.poster.username }}</span>
+                                <span class="glyphicon glyphicon-user"><a href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a></span>
                             </div>
                             <div class="col-md-12"><span class="glyphicon glyphicon-time">{{ post.create_time.date }}</span></div>
                         </div>
