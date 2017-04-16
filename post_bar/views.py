@@ -161,3 +161,11 @@ def login_to_system(request):
 def logout_off_system(request):
     logout(request)
     return redirect('index')
+
+
+def profile(request, user_pk):
+    try:
+        user = User.objects.get(pk=user_pk)
+    except User.DoesNotExist:
+        pass
+    return render(request, 'post_bar/profile.html', {'this_user': user})

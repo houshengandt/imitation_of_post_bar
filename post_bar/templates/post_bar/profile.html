@@ -1,0 +1,69 @@
+{% extends 'post_bar/base.html' %}
+{% block title %}{{ this_user.username }}的主页{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="banner media">
+        <div class="media-left">
+            <img class="post-cover media-object" src="{{ this_user.avatar.url }}" alt="">
+        </div>
+        <div class="media-body">
+            <a href="{{ this_user.get_absolute_url }}"><h2 class="media-heading">{{ this_user.username }}</h2></a>
+        </div>
+    </div>
+    <div class="col-xs-offset-2 col-xs-8">
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="#posted" aria-controls="posted" role="tab" data-toggle="tab">发布的帖子</a></li>
+            <li role="presentation"><a href="#commented" aria-controls="commented" role="tab" data-toggle="tab">回复的帖子</a></li>
+        </ul>
+        <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="posted">
+            <div class="list-group">
+            {% for post in this_user.posted.all %}
+                <div class="list-group-item">
+                    <div class="container-fluid">
+                        <div class="col-md-8">
+                            <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' post.pk %}">{{ post.title }}</a></h4>
+                            <p class="list-group-item-text">{{ post.preview }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="container-fluid">
+                                <div class="col-md-12">
+                                    <span class="glyphicon glyphicon-user">{{ post.poster.username }}</span>
+                                </div>
+                                <div class="col-md-12"><span class="glyphicon glyphicon-time">{{ post.create_time.date }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <h3>该用户还没有发布过贴子</h3>
+            {% endfor %}
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="commented">
+            <div class="list-group">
+            {% for comment in this_user.comments.all %}
+                <div class="list-group-item">
+                    <div class="container-fluid">
+                        <div class="col-md-8">
+                            <p>{{ comment.comment_time }} 回复
+                            {% if comment.has_father %}
+                                {{ comment.father_comment.commenter.username }}
+                            {% else %}
+                                {{ comment.post.poster.username }}
+                            {% endif %}
+                            :{{ comment.comment }}
+                            </p>
+                            <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' comment.post.pk %}">{{ comment.post.title }}</a></h4>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <h3>该用户还没有回复过贴子</h3>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

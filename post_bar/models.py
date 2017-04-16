@@ -62,6 +62,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __unicode__(self):
         return self.username
 
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'user_pk': self.pk})
+
 
 class PostBar(models.Model):
     bar_name = models.CharField("贴吧名称", max_length=32)

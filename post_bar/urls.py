@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^sign-in/$', views.SignInView.as_view(), name="sign-in"),
     url(r'^sign-up/$', views.SignUpView.as_view(), name="sign-up"),
     url(r'^create-user/$', views.create_user, name="create-user"),
+    url(r'^profile/(?P<user_pk>\d+)/$', views.profile, name="profile"),
     url(r'^login/$', views.login_to_system, name="login"),
     url(r'^logout/$', views.logout_off_system, name="logout"),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
