@@ -12,6 +12,7 @@ from django.utils import timezone
 import os, json
 
 from .models import User, PostBar, Post, Comment, Notification
+from .forms import PostForm
 
 
 class TestView(TemplateView):
@@ -67,7 +68,9 @@ def bar_detail(request, post_bar_pk):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
     page_nums = paginator.page_range
-    return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': contacts, 'page_nums': page_nums})
+    form = PostForm()
+    return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': contacts, 'page_nums': page_nums,
+                                                        'form': form})
 
 
 @login_required()

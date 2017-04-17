@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.urls import reverse
 from django.utils.timesince import timesince as since
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 
 class UserManager(BaseUserManager):
@@ -87,7 +88,7 @@ class Post(models.Model):
     bar = models.ForeignKey(to='PostBar', on_delete=models.CASCADE, related_name='posts')
     title = models.CharField("帖子标题", max_length=32)
     poster = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='posted')
-    content = models.TextField("帖子内容")
+    content = RichTextField("帖子内容", config_name='post_ckeditor')
     preview = models.CharField("帖子预览", max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)
     modify_time = models.DateTimeField("修改时间", auto_now=True)

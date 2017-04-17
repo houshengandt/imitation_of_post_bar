@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="post-content col-sm-6">
-            <p class="content">{{ post.content }}</p>
+            <p class="content">{{ post.content | safe }}</p>
             <div class="bottom-info row" bottom>
                 <p class="">{{ post.modify_time }} <a href="#id-comment-form">回复 </a>
                 {% if user == post.poster %}<a href="{% url 'delete_post' post.pk %}">删除</a> {% endif %}

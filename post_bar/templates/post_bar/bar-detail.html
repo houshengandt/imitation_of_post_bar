@@ -1,6 +1,5 @@
 {% extends 'post_bar/base.html' %}
 {% block title %}{{ post_bar.bar_name }}{% endblock %}
-{% block style %}{% endblock %}
 {% block content %}
 <div class="container">
     <div class="banner media">
@@ -71,6 +70,10 @@
         </nav>
         </div>
     </div>
+
+    {% load static %}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <div class="post-form-wrapper container col-md-offset-2 col-md-8">
         <h4><span class="glyphicon glyphicon-pencil">发表新帖</span></h4>
         <hr>
@@ -81,7 +84,8 @@
                 <input type="text" class="form-control" name="title" placeholder="请填写标题">
             </div>
             <div class="form-group">
-                <textarea name="content" class="form-control" rows="10"></textarea>
+                {{ form.media }}
+                {{ form.as_p }}
             </div>
             <button type="submit" class="btn btn-default">发表</button>
         </form>
