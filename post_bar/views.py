@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 
-import os, json
+import os, json,  HTMLParser
 
 from .models import User, PostBar, Post, Comment, Notification
 from .forms import PostForm

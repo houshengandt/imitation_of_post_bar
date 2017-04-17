@@ -31,7 +31,14 @@
                 <div class="container-fluid">
                     <div class="col-md-8">
                         <h4 class="list-group-item-heading"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
-                        <p class="list-group-item-text">{{ post.preview }}</p>
+                        <p class="list-group-item-text">
+                            {% autoescape on %}{{ post.content|striptags|truncatechars:100|linebreaks }}{% endautoescape %}
+                        </p>
+                        {% if post.images %}
+                        {% for img in post.images %}
+                            {{ img | safe }}
+                        {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="col-md-4">
                         <div class="container-fluid">

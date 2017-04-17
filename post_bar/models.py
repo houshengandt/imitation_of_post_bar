@@ -6,7 +6,9 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.urls import reverse
 from django.utils.timesince import timesince as since
 from django.utils import timezone
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+
+from bs4 import BeautifulSoup
 
 
 class UserManager(BaseUserManager):
@@ -88,11 +90,24 @@ class Post(models.Model):
     bar = models.ForeignKey(to='PostBar', on_delete=models.CASCADE, related_name='posts')
     title = models.CharField("帖子标题", max_length=32)
     poster = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='posted')
-    content = RichTextField("帖子内容", config_name='post_ckeditor')
+    content = RichTextUploadingField("帖子内容", config_name='post_ckeditor')
     preview = models.CharField("帖子预览", max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)
     modify_time = models.DateTimeField("修改时间", auto_now=True)
     update_time = models.DateTimeField("更新时间", auto_now=True)
+
+    @property
+    def images(self):
+        bs = BeautifulSoup(self.content)
+        imgs = bs.find_all('img')
+        if len(imgs) > 2:
+            imgs = imgs[:2]
+        images = []
+        for i in imgs:
+            i['style'] = "height:50px; width:50px"
+            print(i)
+            images.append(str(i))
+        return images
 
     def save(self, *args, **kwargs):
         self.preview = self.content[:250]

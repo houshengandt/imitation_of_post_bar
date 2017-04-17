@@ -149,4 +149,6 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_JQUERY_URL = 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js'
