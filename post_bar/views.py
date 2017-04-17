@@ -7,9 +7,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-import os
+import os, json
 
-from .models import User, PostBar, Post, Comment
+from .models import User, PostBar, Post, Comment, Notification
 
 
 class TestView(TemplateView):
@@ -111,6 +111,9 @@ def add_comment(request):
             new_comment = Comment(post=post, comment=comment, commenter=commenter)
 
         new_comment.save()
+
+        new_notification = Notification(receiver=post.poster, trigger=request.user, action_content=new_comment)
+        new_notification.save()
         # return HttpResponse()
         return redirect('post_deatil', post_pk=post.pk)
 
@@ -169,3 +172,21 @@ def profile(request, user_pk):
     except User.DoesNotExist:
         pass
     return render(request, 'post_bar/profile.html', {'this_user': user})
+
+
+def get_notification(request):
+    notifications = Notification.objects.filter(receiver=request.user, unread=True)
+    noti = []
+    for notification in notifications:
+        n = {'trigger': notification.trigger.username, 'trigger_id': notification.trigger.pk,
+             'action_content': notification.action_content.comment, 'action_content_id': notification.action_content.pk}
+        noti.append(n)
+    noti = json.dumps(noti)
+    return HttpResponse(noti)
+
+
+def mark_all_as_read(request):
+    notifications = Notification.objects.filter(receiver=request.user)
+    for notification in notifications:
+        notification.mark_as_read()
+    return HttpResponse()

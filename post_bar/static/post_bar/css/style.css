@@ -80,3 +80,11 @@ body {
     margin-top: 50px;
     font-size: large;
 }
+
+
+
+.mark-as-read {
+    text-align: center;
+    color: white;
+    font-size: medium;
+}

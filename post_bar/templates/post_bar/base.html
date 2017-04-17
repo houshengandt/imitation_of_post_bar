@@ -13,6 +13,7 @@
         <a class="navbar-brand" href="{% url 'index' %}">贴吧</a>
         <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
+            <li><a id="id_notification" class="navbar-link" tabindex="0" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="没有未读消息">消息<span class="badge"></span></a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
                 <ul class="dropdown-menu">

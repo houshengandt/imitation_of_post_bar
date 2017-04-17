@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.urls import reverse
+from django.utils.timesince import timesince as since
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -86,7 +88,7 @@ class Post(models.Model):
     title = models.CharField("帖子标题", max_length=32)
     poster = models.ForeignKey(to='User', on_delete=models.CASCADE, related_name='posted')
     content = models.TextField("帖子内容")
-    preview = models.CharField("帖子预览",max_length=250)
+    preview = models.CharField("帖子预览", max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)
     modify_time = models.DateTimeField("修改时间", auto_now=True)
 
@@ -97,8 +99,9 @@ class Post(models.Model):
     def __unicode__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse('blog:detail', kwargs={'article_id': self.pk})
+    def get_absolute_url(self):
+        return reverse('post_detail', kwargs={'post_pk': self.pk})
+
 
 class Comment(models.Model):
     post = models.ForeignKey(to='Post', on_delete=models.CASCADE, related_name='comments')
@@ -112,3 +115,19 @@ class Comment(models.Model):
 
     def has_child(self):
         return self.child_comment != None
+
+
+class Notification(models.Model):
+    receiver = models.ForeignKey(to='User', related_name="notifications")
+    unread = models.BooleanField("未读", default=True)
+    trigger = models.ForeignKey(to='User', related_name="triggered_notifications")
+    triggered_time = models.DateTimeField("触发时间", auto_now_add=True)
+    action_content = models.ForeignKey(to='Comment', related_name='as_notifications')
+
+    def mark_as_read(self):
+        if self.unread:
+            self.unread = False
+            self.save()
+
+    def time_since(self):
+        return since(self.triggered_time, timezone.now())
