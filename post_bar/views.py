@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import os, json
 
@@ -56,7 +57,16 @@ def enter_or_create(request):
 def bar_detail(request, post_bar_pk):
     post_bar = PostBar.objects.get(pk=post_bar_pk)
     posts = Post.objects.filter(bar=post_bar)
-    return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': posts})
+    paginator = Paginator(posts, 10)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+    page_nums = paginator.page_range
+    return render(request, 'post_bar/bar-detail.html', {'post_bar': post_bar, 'posts': contacts, 'page_nums': page_nums})
 
 
 @login_required()
@@ -91,9 +101,18 @@ def post_detail(request, post_pk):
     comments = Comment.objects.filter(post=post)
     comments_has_not_father = Comment.objects.filter(post=post, father_comment=None)
     comments_has_father = Comment.objects.filter(post=post).exclude(father_comment=None)
+    paginator = Paginator(comments_has_not_father, 10)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+    page_nums = paginator.page_range
     post_bar = post.bar
-    content = {'post_bar': post_bar, 'post': post, 'comments': comments, 'comments_has_father': comments_has_father,
-               'comments_has_not_father': comments_has_not_father}
+    content = {'post_bar': post_bar, 'post': post, 'comments_has_father': comments_has_father,
+               'comments_has_not_father': contacts, 'page_nums': page_nums}
 
     return render(request, 'post_bar/post-detail.html', content)
 
@@ -115,7 +134,7 @@ def add_comment(request):
         new_notification = Notification(receiver=post.poster, trigger=request.user, action_content=new_comment)
         new_notification.save()
         # return HttpResponse()
-        return redirect('post_deatil', post_pk=post.pk)
+        return redirect('post_detail', post_pk=post.pk)
 
 
 @login_required()

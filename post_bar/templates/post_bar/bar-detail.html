@@ -30,7 +30,7 @@
             <div class="list-group-item">
                 <div class="container-fluid">
                     <div class="col-md-8">
-                        <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' post.pk %}">{{ post.title }}</a></h4>
+                        <h4 class="list-group-item-heading"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
                         <p class="list-group-item-text">{{ post.preview }}</p>
                     </div>
                     <div class="col-md-4">
@@ -46,6 +46,28 @@
         {% empty %}
             <h3>该贴吧还没有贴子</h3>
         {% endfor %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if posts.has_previous %}
+                <li>
+                    <a href="{% url 'bar_detail' post_bar.pk %}?page={{ posts.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% for page_num in page_nums %}
+                <li><a href="{% url 'bar_detail' post_bar.pk %}?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endfor %}
+                {% if posts.has_next %}
+                <li>
+                    <a href="{% url 'bar_detail' post_bar.pk %}?page={{ posts.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
         </div>
     </div>
     <div class="post-form-wrapper container col-md-offset-2 col-md-8">

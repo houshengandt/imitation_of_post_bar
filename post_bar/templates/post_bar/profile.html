@@ -22,7 +22,7 @@
                 <div class="list-group-item">
                     <div class="container-fluid">
                         <div class="col-md-8">
-                            <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' post.pk %}">{{ post.title }}</a></h4>
+                            <h4 class="list-group-item-heading"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
                             <p class="list-group-item-text">{{ post.preview }}</p>
                         </div>
                         <div class="col-md-4">
@@ -54,7 +54,7 @@
                             {% endif %}
                             : {{ comment.comment }}
                             </p>
-                            <h4 class="list-group-item-heading"><a href="{% url 'post_deatil' comment.post.pk %}">{{ comment.post.title }}</a></h4>
+                            <h4 class="list-group-item-heading"><a href="{% url 'post_detail' comment.post.pk %}">{{ comment.post.title }}</a></h4>
                         </div>
                     </div>
                 </div>

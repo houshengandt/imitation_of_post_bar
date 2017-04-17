@@ -81,6 +81,8 @@
             </div>
         </div>
     {% endif %}
+    {% endfor %}
+
     <div class="row">
         <div class="comment-form-wrapper col-xs-offset-4 col-xs-6">
             <div class="collapse" id="collapse_{{ comment_has_not_father.pk }}">
@@ -97,7 +99,30 @@
             </div>
         </div>
     </div>
-    {% endfor %}
+    <div class="col-xs-offset-2 col-xs-8">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if comments_has_not_father.has_previous %}
+                <li>
+                    <a href="{% url 'post_detail' post.pk %}?page={{ comments_has_not_father.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% for page_num in page_nums %}
+                <li><a href="{% url 'post_detail' post.pk %}?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endfor %}
+                {% if comments_has_not_father.has_next %}
+                <li>
+                    <a href="{% url 'post_detail' post.pk %}?page={{ comments_has_not_father.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
 
     <div id="id-comment-form" class="post-form-wrapper container col-md-offset-2 col-md-8">
         <h4><span class="glyphicon glyphicon-pencil">发表回复</span></h4>
