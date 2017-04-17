@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils import timezone
 
 import os, json
 
@@ -56,7 +57,7 @@ def enter_or_create(request):
 
 def bar_detail(request, post_bar_pk):
     post_bar = PostBar.objects.get(pk=post_bar_pk)
-    posts = Post.objects.filter(bar=post_bar)
+    posts = Post.objects.filter(bar=post_bar).order_by('-update_time')
     paginator = Paginator(posts, 10)
     page = request.GET.get('page')
     try:
@@ -80,7 +81,7 @@ def create_post(request):
         new_post = Post(bar=bar, title=title, content=content, poster=poster)
         new_post.save()
 
-    return redirect('index')   # 跳转到帖子详情页
+    return redirect('post_detail', post_pk=new_post.pk)
 
 
 @login_required()
@@ -99,7 +100,7 @@ def delete_post(request, post_pk):
 def post_detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comments = Comment.objects.filter(post=post)
-    comments_has_not_father = Comment.objects.filter(post=post, father_comment=None)
+    comments_has_not_father = Comment.objects.filter(post=post, father_comment=None).order_by('-comment_time')
     comments_has_father = Comment.objects.filter(post=post).exclude(father_comment=None)
     paginator = Paginator(comments_has_not_father, 10)
     page = request.GET.get('page')
@@ -128,7 +129,8 @@ def add_comment(request):
             new_comment = Comment(post=post, comment=comment, commenter=commenter, father_comment=parent_comment)
         else:
             new_comment = Comment(post=post, comment=comment, commenter=commenter)
-
+        post.update_time = timezone.now()
+        post.save()
         new_comment.save()
 
         new_notification = Notification(receiver=post.poster, trigger=request.user, action_content=new_comment)
@@ -163,6 +165,10 @@ class SignInView(TemplateView):
     template_name = 'post_bar/sign-in.html'
 
 
+def sign_in(request):
+    request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
+    return render(request, 'post_bar/sign-in.html')
+
 class SignUpView(TemplateView):
     template_name = 'post_bar/sign-up.html'
 
@@ -180,18 +186,19 @@ def create_user(request):
 
 
 def login_to_system(request):
+    next_url = request.POST.get('next')
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user and user.is_active:
             login(request, user)
-    return HttpResponse()
+    return redirect(request.session['login_from'])
 
 
 def logout_off_system(request):
     logout(request)
-    return redirect('index')
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def profile(request, user_pk):

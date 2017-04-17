@@ -91,6 +91,7 @@ class Post(models.Model):
     preview = models.CharField("帖子预览", max_length=250)
     create_time = models.DateTimeField("发帖时间", auto_now_add=True)
     modify_time = models.DateTimeField("修改时间", auto_now=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
 
     def save(self, *args, **kwargs):
         self.preview = self.content[:250]
