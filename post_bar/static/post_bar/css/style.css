@@ -51,6 +51,10 @@ body {
     padding: 0;
 }
 
+.child-comment-form-wrapper {
+    margin: 0 15px;
+}
+
 .comment-wrapper {
     padding: 0;
     margin-top: -20px;

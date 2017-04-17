@@ -116,6 +116,9 @@ class Comment(models.Model):
     def has_child(self):
         return self.child_comment != None
 
+    def trace_father(self):
+        pass
+
 
 class Notification(models.Model):
     receiver = models.ForeignKey(to='User', related_name="notifications")

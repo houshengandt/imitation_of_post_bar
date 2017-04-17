@@ -32,6 +32,23 @@ function getNotifications() {
 
 }
 
+function replayChildComment() {
+    $('button[button_id]').each(function () {
+        $(this).on('click', function () {
+            var button_id = $(this).attr('button_id');
+            console.log(button_id);
+
+            var datas = $('form[form_id=' + button_id +']').serializeArray();
+            console.log(datas);
+            $.post('/create_comment/', datas).done(function (datas) {
+                $('ul[ul_id=' + button_id + ']').append(datas);
+                $('li[li_id=' + button_id + ']').after(datas);
+            });
+        })
+    });
+
+}
+
 $(document).ready(function () {
 	$(function () {
     	$('[data-toggle="popover"]').popover()
@@ -43,5 +60,6 @@ $(document).ready(function () {
         getNotifications();
     });
     setInterval(getNotifications, 10000);
+    replayChildComment();
 
 });

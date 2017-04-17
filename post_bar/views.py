@@ -134,18 +134,27 @@ def add_comment(request):
         new_notification = Notification(receiver=post.poster, trigger=request.user, action_content=new_comment)
         new_notification.save()
         # return HttpResponse()
-        return redirect('post_detail', post_pk=post.pk)
+        if request.is_ajax():
+            response_content = '<li class="comment-list-item list-group-item"><p><a href="%s">' \
+                               '你</a> 回复 <a href="%s">' \
+                               '%s</a>:<p>%s</p><div class="comment-info"><a href="%s">删除</a></div></li>'
+            response_content = response_content % (commenter.get_absolute_url(), parent_comment.commenter.get_absolute_url(),
+                                                   parent_comment.commenter.username, comment, '/delete_comment/' + str(new_comment.pk))
+            print(response_content)
+            return HttpResponse(response_content)
+        else:
+            return redirect('post_detail', post_pk=post.pk)
 
 
 @login_required()
-def delete_comment(request, commnet_pk):
+def delete_comment(request, comment_pk):
     try:
-        comment = Comment.objects.get(pk=commnet_pk)
+        comment = Comment.objects.get(pk=comment_pk)
     except Comment.DoesNotExist:
         pass
     if request.user == comment.commenter or request.user == comment.post.poster:
         comment.delete()
-        return HttpResponse()
+        return redirect('post_detail', post_pk=comment.post.pk)
     else:
         return HttpResponse(status=403)
 
