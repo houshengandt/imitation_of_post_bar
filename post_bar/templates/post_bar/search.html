@@ -1,0 +1,31 @@
+{% extends 'post_bar/base.html' %}
+{% block title %}{{ keyword }} 的搜索结果{% endblock %}
+{% block content %}
+<div class="container">
+    {% if status %}
+    <h2>共有{{ count }}条相关的结果：</h2>
+    {% for result in results %}
+    <div class="list-group-item">
+        <div class="container-fluid">
+            <div class="col-md-8">
+                <h4 class="list-group-item-heading"><a href="{% url 'post_detail' result.pk %}">{{ result.title }}</a></h4>
+                <p class="list-group-item-text">{{ result.preview }}</p>
+            </div>
+            <div class="col-md-4">
+                <div class="container-fluid">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-user"><a href="{{ result.poster.get_absolute_url }}">{{ result.poster.username }}</a></span>
+                    </div>
+                    <div class="col-md-12"><span class="glyphicon glyphicon-time">{{ result.create_time.date }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h2>没有搜索结果</h2>
+    {% endif %}
+
+
+</div>
+{% endblock %}

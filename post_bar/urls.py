@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^logout/$', views.logout_off_system, name="logout"),
     url(r'^get_notification/$', views.get_notification, name="get_notification"),
     url(r'^mark_all_as_read/$', views.mark_all_as_read, name="mark_all_as_read"),
+    url(r'^search_result/$', views.get_search, name="search"),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -169,6 +169,7 @@ def sign_in(request):
     request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
     return render(request, 'post_bar/sign-in.html')
 
+
 class SignUpView(TemplateView):
     template_name = 'post_bar/sign-up.html'
 
@@ -225,3 +226,18 @@ def mark_all_as_read(request):
     for notification in notifications:
         notification.mark_as_read()
     return HttpResponse()
+
+
+def get_search(request):
+    keyword = request.POST['search_words']
+    posts = Post.objects.all()
+    results = []
+    for x in posts:
+        if keyword in x.title:
+            results.append(x)
+        elif keyword in x.content:
+            results.append(x)
+    status = False if len(results) == 0 else True
+    count = len(results)
+
+    return render(request, 'post_bar/search.html', {"keyword": keyword, "results": results, "status": status, "count": count})
