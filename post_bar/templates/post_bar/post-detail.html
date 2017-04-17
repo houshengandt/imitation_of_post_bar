@@ -62,8 +62,8 @@
     <div class="row">
         <div class="comment-wrapper col-xs-offset-4 col-xs-6">
             <ul ul_id="{{ comment_has_not_father.pk }}" class="comment-list list-group">
-                {% for comment_has_father in comment_has_not_father.child_comment.all %}
-{#                    {% if comment_has_father.trace_father == comment_has_not_father %}#}
+                {% for comment_has_father in comments_has_father %}
+                    {% if comment_has_father.trace_father == comment_has_not_father %}
                     <li li_id="{{ comment_has_father.pk }}" class="comment-list-item list-group-item">
                         <p>
                             <a href="{{ comment_has_father.commenter.get_absolute_url }}">{{ comment_has_father.commenter.username }}</a> 回复
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                     </div>
-{#                    {% endif %}#}
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>

@@ -134,7 +134,14 @@ class Comment(models.Model):
         return self.child_comment != None
 
     def trace_father(self):
-        pass
+        comment = self
+        if comment.father_comment is not None:
+            return comment.father_comment.trace_father()
+        else:
+            return comment
+
+    def __unicode__(self):
+        return str(self.pk)
 
 
 class Notification(models.Model):
